@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+
+import Home from './pages/Home/Home';
+import Posts from './pages/Posts/Posts';
 
 function App() {
+  const [authMode, setAuthMode] = useState({login: false, signup: true});
+
+  const authSwitchHandler = () => {
+    setAuthMode({login: !authMode.login, signup: !authMode.signup});
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Switch>
+      <Route path="/" exact>
+        <Home authMode={authMode.signup} authSwitch={authSwitchHandler} token={localStorage.getItem("token")}/>
+      </Route>
+      <Route path="/allposts">
+        <Posts token={localStorage.getItem("token")}/>
+      </Route>
+      <Redirect to="/"/>
+    </Switch>
+    );
 }
 
 export default App;
